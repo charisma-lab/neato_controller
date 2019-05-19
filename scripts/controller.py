@@ -23,7 +23,7 @@ class NeatoNode:
     def __init__(self):
         """ Start up connection to the Neato Robot. """
         rospy.init_node('controller'+chairbot_number, anonymous=True)
-        self._port = rospy.get_param('~neato_port', "/dev/neato_port")
+        self._port = rospy.get_param('~neato_port', "/dev/neato")
         rospy.loginfo("Using port: %s"%(self._port))
         self.ramp_rate=rospy.get_param("~ramp_rate",0.3)
         self.timeout_ticks = rospy.get_param("~timeout_ticks", 2)
