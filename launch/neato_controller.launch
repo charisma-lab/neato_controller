@@ -1,0 +1,9 @@
+<launch>
+	<param name="use_sim_time" value="false"/>
+
+  <arg name="user" default="$(env USER)"/>
+  <node name="$(arg user)" pkg="neato_controller" type="controller.py" output="screen">
+    <param name="neato_port" value="/dev/neato" />
+  </node>
+
+</launch>
