@@ -55,8 +55,8 @@ class NeatoNode:
 
         self.robot = Botvac(self.port)
 
-        rospy.Subscriber("cmd_vel_mux/input/navi", Twist, self.cmdVelCb)
-        self.scanPub = rospy.Publisher('base_scan', LaserScan, queue_size=10)
+        rospy.Subscriber("cmd_vel", Twist, self.cmdVelCb)
+        self.scanPub = rospy.Publisher('scan', LaserScan, queue_size=10)
         self.odomPub = rospy.Publisher('odom', Odometry, queue_size=10)
         self.odomBroadcaster = TransformBroadcaster()
 
@@ -65,7 +65,7 @@ class NeatoNode:
     def spin(self):        
         encoders = [0,0]
 
-        self.x = 0                  # position in xy plane
+        self.x = 0 # position in xy plane
         self.y = 0
         self.th = 0
         then = rospy.Time.now()
@@ -81,7 +81,7 @@ class NeatoNode:
         odom = Odometry(header=rospy.Header(frame_id="odom"), child_frame_id='base_footprint')
     
         # main loop of driver
-        r = rospy.Rate(5)
+        r = rospy.Rate(10)
         self.robot.requestScan()
         while not rospy.is_shutdown():
             # prepare laser scan
@@ -143,7 +143,7 @@ class NeatoNode:
         self.robot.setTestMode("off") 
 
     def cmdVelCb(self,req):
-        x = req.linear.x * 1000
+        x = req.linear.x * (1000)
         th = req.angular.z * (BASE_WIDTH/2) 
         k = max(abs(x-th),abs(x+th))
         # sending commands higher than max speed will fail
