@@ -56,7 +56,7 @@ class NeatoNode:
         self.robot = Botvac(self.port)
 
         rospy.Subscriber("cmd_vel", Twist, self.cmdVelCb)
-        self.scanPub = rospy.Publisher('scan', LaserScan, queue_size=10)
+        self.scanPub = rospy.Publisher('sscan', LaserScan, queue_size=10)
         self.odomPub = rospy.Publisher('odom', Odometry, queue_size=10)
         self.odomBroadcaster = TransformBroadcaster()
 
@@ -85,7 +85,7 @@ class NeatoNode:
         self.robot.requestScan()
         while not rospy.is_shutdown():
             # prepare laser scan
-            scan.header.stamp = rospy.Time.now()    
+            scan.header.stamp = rospy.Time.now()  
             #self.robot.requestScan()
             scan.ranges = self.robot.getScanRanges()
 
