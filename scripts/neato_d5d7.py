@@ -53,9 +53,9 @@ class NeatoNode:
 
     def __init__(self):
         """ Start up connection to the Neato Robot. """
-        rospy.init_node('neato')
+        rospy.init_node('neato01')
 
-        self.port = rospy.get_param('~port', "/dev/ttyUSB0")
+        self.port = rospy.get_param('~port', rospy.get_param('~neato_port'))
         self.lds = rospy.get_param('~lds', True)
         rospy.loginfo("Using port: %s" % self.port)
 

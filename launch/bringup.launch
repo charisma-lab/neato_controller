@@ -8,6 +8,8 @@
 
 	  <node name="neato" pkg="neato_controller" type="neato_d5d7.py" output="screen">
 		<param name="neato_port" value="$(env NEATO_PORT)" />
+		<param name="port" value="$(env NEATO_PORT)" />
+
 	  </node>
 	</group>
 </launch>
