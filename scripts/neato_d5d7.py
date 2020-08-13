@@ -316,12 +316,12 @@ class NeatoNode:
 
     def violate_safety_constraints(left_drop, right_drop, *digital_sensors ):
         if left_drop > 30 or right_drop > 30:
-            print "safety constraint violated by drop sensor"
+            rospy.logdebug("safety constraint violated by drop sensor")
             return True
         else:
             for sensor in digital_sensors:
                 if sensor == 1:
-                    print "safety constraint violated by digital sensor"
+                    rospy.logdebug("safety constraint violated by digital sensor")
                     return True
         return False
 
