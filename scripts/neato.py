@@ -53,7 +53,7 @@ class NeatoNode:
 
     def __init__(self):
         """ Start up connection to the Neato Robot. """
-        rospy.init_node('neato01')
+        rospy.init_node('neato')
 
         self.port = rospy.get_param('~port', rospy.get_param('~neato_port'))
         self.lds = rospy.get_param('~lds', True)
@@ -63,10 +63,10 @@ class NeatoNode:
 
         rospy.Subscriber("cmd_vel", Twist, self.cmdVelCb)
         rospy.Subscriber("cmd_dist", Movement, self.cmdMovementCb)
-        self.scanPub = rospy.Publisher('base_scan', LaserScan, queue_size=1)
-        self.odomPub = rospy.Publisher('odom', Odometry, queue_size=1)
+        self.scanPub = rospy.Publisher('base_scan', LaserScan, queue_size=10)
+        self.odomPub = rospy.Publisher('odom', Odometry, queue_size=10)
         self.encoderPub = rospy.Publisher('encoder', Encoder, queue_size=1)
-        self.buttonPub = rospy.Publisher('button', Button, queue_size=1)
+        self.buttonPub = rospy.Publisher('button', Button, queue_size=0)
         self.sensorPub = rospy.Publisher('sensor', Sensor, queue_size=1)
         self.accelerationPub = rospy.Publisher('acceleration', Vector3Stamped, queue_size=1)
         self.wallPub = rospy.Publisher('wall', Range, queue_size=1)
@@ -99,7 +99,7 @@ class NeatoNode:
         scan.range_min = 0.020
         scan.range_max = 5.0
 
-        odom = Odometry(header=rospy.Header(frame_id="odom"), child_frame_id='base_link')
+        odom = Odometry(header=rospy.Header(frame_id="odom"), child_frame_id='base_footprint')
         self.odomPub.publish(odom)
 
         encoder = Encoder()
@@ -120,7 +120,8 @@ class NeatoNode:
         loop_counter = 0
         try: 
             while not rospy.is_shutdown():
-
+                #import pdb
+                #pdb.set_trace()
                 if loop_counter == 4:
                     self.set_battery_status()
                     self.publish_scan(scan)
@@ -140,6 +141,7 @@ class NeatoNode:
                     self.robot.setMotors(0, 0, 0)
                     self.cmd_vel = 0
                 elif self.update_movement:
+                    print("We are gonna tell the robot to : %s %s %s", self.cmd_dist[0], self.cmd_dist[1], self.cmd_vel)
                     self.robot.setMotors(self.cmd_dist[0], self.cmd_dist[1], self.cmd_vel)
                     # reset update flag 
                     self.update_movement = False
@@ -167,6 +169,7 @@ class NeatoNode:
             self.robot.setTestMode("off")
 
     def cmdVelCb(self,req):
+        #print("We got request as ", req)
         dist_increment = 100
         k = req.linear.x
         th = req.angular.z
@@ -230,7 +233,7 @@ class NeatoNode:
         # publish everything
         self.odomPub.publish(odom)
         self.odomBroadcaster.sendTransform((self.x, self.y, 0), (quaternion.x, quaternion.y, quaternion.z,
-                                                                         quaternion.w), rospy.Time.now(), "base_link", "odom")
+                                                                         quaternion.w), rospy.Time.now(), "base_footprint", "odom")
         encoder.header.stamp = rospy.Time.now()
         encoder.left = d_left
         encoder.right = d_right
@@ -316,8 +319,8 @@ class NeatoNode:
 
     def violate_safety_constraints(left_drop, right_drop, *digital_sensors ):
         if left_drop > 30 or right_drop > 30:
-            rospy.logdebug("safety constraint violated by drop sensor")
-            return True
+            print("safety constraint violated by drop sensor -- we are ignoring it")
+            return False
         else:
             for sensor in digital_sensors:
                 if sensor == 1:
