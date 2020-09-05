@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  message_generation
 )
 
 # Generate messages in the 'msg' folder
@@ -27,10 +28,8 @@ find_package(catkin REQUIRED COMPONENTS
  )
 
 catkin_package(
-  INCLUDE_DIRS include
   LIBRARIES neato_controller
   CATKIN_DEPENDS roscpp rospy std_msgs
-  DEPENDS system_lib
 )
 
 include_directories(

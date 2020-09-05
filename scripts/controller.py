@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import roslib; roslib.load_manifest("chairbot_neato_node")
+import roslib; roslib.load_manifest("neato_node")
 import rospy, time
 
 from math import sin, cos, fabs
@@ -8,7 +8,7 @@ from geometry_msgs.msg import Twist
 from std_msgs.msg import UInt16
 from sensor_msgs.msg import Joy
 from std_msgs.msg import Int8
-from chairbot_neato_driver.chairbot_neato_driver import Botvac
+from neato_driver.neato_driver import Botvac
 #from neato_controller.msg import NeatoCommand
 
 import socket
