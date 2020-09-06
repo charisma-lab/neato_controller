@@ -2,7 +2,7 @@
 -->
 <launch>
 	<arg name="user" default="$(env NEATO_NAME)"/>
-	<!-- <group ns="$(arg user)"> -->
+	<group ns="$(arg user)"> 
 	  <node pkg="tf" type="static_transform_publisher" name="laser_to_base"
 		args="-0.1016 0 0.0889 0 0 0 base_footprint base_laser_link 50" />
 
@@ -11,5 +11,5 @@
 		<param name="port" value="$(env NEATO_PORT)" />
 
 	 </node>
-	<!-- </group> -->
+	</group> 
 </launch>
