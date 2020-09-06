@@ -183,8 +183,20 @@ class NeatoNode:
         elif k == 0:
             self.cmd_dist = [-dist_increment*th, dist_increment*th]
         if k != 0 and th != 0:
-            self.cmd_dist = [0, 0]
-            self.cmd_vel = 0
+            #self.cmd_dist = [0, 0]
+            #self.cmd_vel = 0
+            rospy.logwarn("Modified code to send cmd_distance")
+            BASE_WIDTH = 248
+            MAX_SPEED = 200
+            x = req.linear.x * (1000)
+            th = req.angular.z * (BASE_WIDTH/2) 
+            k = max(abs(x-th),abs(x+th))
+            # sending commands higher than max speed will fail
+            if k > MAX_SPEED:
+                x = x*MAX_SPEED/k; th = th*MAX_SPEED/k
+            self.cmd_dist = [ req.linear.x, req.linear.y ]
+            self.cmd_vel = req.angular.z
+            print ("Message for robot : %s %s" % (self.cmd_dist, self.cmd_vel))
         else:
             self.cmd_vel = 200
         self.update_movement = True
