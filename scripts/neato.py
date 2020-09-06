@@ -169,6 +169,8 @@ class NeatoNode:
             self.robot.setTestMode("off")
 
     def cmdVelCb(self,req):
+        #import pdb
+        #pdb.set_trace()
         #print("We got request as ", req)
         dist_increment = 100
         k = req.linear.x
@@ -319,7 +321,7 @@ class NeatoNode:
 
     def violate_safety_constraints(left_drop, right_drop, *digital_sensors ):
         if left_drop > 30 or right_drop > 30:
-            print("safety constraint violated by drop sensor -- we are ignoring it")
+            rospy.logdebug("safety constraint violated by drop sensor -- we are ignoring it")
             return False
         else:
             for sensor in digital_sensors:
